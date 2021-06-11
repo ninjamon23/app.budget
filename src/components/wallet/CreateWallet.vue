@@ -25,6 +25,7 @@
           class="form-control"
           v-model="form.balance"
           required
+          step="0.01"
         />
         <label for="floatingInput">Wallet Balance</label>
       </div>
@@ -40,8 +41,9 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
-  props: ['walletTypes'],
+  props: ['walletTypes', 'id'],
   data () {
     return {
       form: {
@@ -53,7 +55,11 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['getWalletToModify'])
+  },
   methods: {
+    ...mapActions(['setCurrentWalletComponent', 'setWalletToModify']),
     saveWallet () {
       let wallets = localStorage.getItem('wallets')
       if (!wallets) {
@@ -61,21 +67,48 @@ export default {
       } else {
         wallets = JSON.parse(wallets)
       }
+      if (this.getWalletToModify) {
+        wallets = wallets.filter(el => el.name !== this.getWalletToModify.name)
+      }
       wallets.push(this.form)
       localStorage.setItem('wallets', JSON.stringify(wallets))
-      this.$emit('saved', 'ListOfWallet')
+      // this.$emit('saved', 'ListOfWallet')
+      this.setWalletToModify(null)
+      this.setCurrentWalletComponent('ListOfWallet')
     },
     cancel () {
-      this.$emit('saved', 'ListOfWallet')
+      // this.$emit('saved', 'ListOfWallet')
+      this.setWalletToModify(null)
+      this.setCurrentWalletComponent('ListOfWallet')
+    }
+  },
+  mounted () {
+    if (this.getWalletToModify) {
+      this.form = JSON.parse(JSON.stringify(this.getWalletToModify))
     }
   },
   activated () {
-    this.form = {
-      id: 0,
-      name: '',
-      type: null,
-      balance: 0,
-      selected: false
+    // if (!this.id) {
+    //   this.form = {
+    //     id: 0,
+    //     name: '',
+    //     type: null,
+    //     balance: 0,
+    //     selected: false
+    //   }
+    // } else {
+    //   let wallets = localStorage.getItem('wallets')
+    //   if (!wallets) {
+    //     wallets = []
+    //   } else {
+    //     wallets = JSON.parse(wallets)
+    //   }
+
+    //   this.form = wallets.find(el => el.id === this.id)
+    // }
+    console.log('activated>')
+    if (this.getWalletToModify) {
+      this.form = JSON.parse(JSON.stringify(this.getWalletToModify))
     }
   }
 }

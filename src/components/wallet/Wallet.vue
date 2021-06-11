@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="px-4 py-5 my-5" v-if="currentWalletComponent === ''">
+    <div class="px-4 py-5 my-5" v-if="getWalletCurrentComponent === ''">
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
         <h3 v-if="wallets.length === 0">
           You don't have any wallet yet, create your first wallet info!
@@ -8,7 +8,7 @@
         <button
           type="button"
           class="btn btn-primary btn-lg px-4 gap-3"
-          @click="currentWalletComponent = 'CreateWallet'"
+          @click="createWallet"
         >
           Create New Wallet
         </button>
@@ -16,13 +16,11 @@
     </div>
     <div class="row">
       <div class="col-lg-10">
-        <keep-alive>
-          <component
-            v-bind:is="currentWalletComponent"
+        <component
+            v-bind:is="getWalletCurrentComponent"
             :wallet-types="walletTypes"
             @saved="saved"
           />
-        </keep-alive>
       </div>
     </div>
   </div>
@@ -31,6 +29,7 @@
 <script>
 import CreateWallet from './CreateWallet.vue'
 import ListOfWallet from './ListOfWallet.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     CreateWallet,
@@ -47,9 +46,17 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters(['getWalletCurrentComponent'])
+  },
   methods: {
+    ...mapActions(['setCurrentWalletComponent', 'setWalletToModify']),
     saved (component) {
       this.currentWalletComponent = component
+    },
+    createWallet () {
+      this.setWalletToModify(null)
+      this.setCurrentWalletComponent('CreateWallet')
     },
     getWallets () {
       let wallets = localStorage.getItem('wallets')
@@ -63,7 +70,8 @@ export default {
   },
   mounted () {
     if (this.getWallets().length > 0) {
-      this.currentWalletComponent = 'ListOfWallet'
+      // this.currentWalletComponent = 'ListOfWallet'
+      this.setCurrentWalletComponent('ListOfWallet')
     }
   }
 }
