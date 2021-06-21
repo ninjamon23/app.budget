@@ -12,7 +12,7 @@
         </button>
       </div>
     </div>
-    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <!-- <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button
           type="button"
@@ -133,7 +133,7 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 

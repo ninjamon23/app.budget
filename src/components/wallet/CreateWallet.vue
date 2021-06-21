@@ -2,7 +2,7 @@
   <div class="mt-5">
     <h1>Wallet Form</h1>
     <form @submit.prevent="saveWallet">
-      <div class="form-floating mb-3">
+      <div class="form-floating mb-3 needs-validation">
         <input
           type="text"
           class="form-control"
