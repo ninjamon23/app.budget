@@ -29,11 +29,13 @@
             <li>
               <router-link to="/" class="nav-link px-2 link-dark">Home</router-link>
             </li>
-            <li v-if="$auth.isAuthenticated"><a href="#" class="nav-link px-2 link-dark">Transaction</a></li>
-            <li v-if="$auth.isAuthenticated">
+            <li >
+              <router-link to="/transaction" class="nav-link px-2 link-dark">Tranasction</router-link>
+            </li>
+            <li >
               <router-link to="/wallet" class="nav-link px-2 link-dark"> Wallet</router-link>
             </li>
-            <li v-if="$auth.isAuthenticated"><a href="#" class="nav-link px-2 link-dark">Report</a></li>
+            <li ><a href="#" class="nav-link px-2 link-dark">Report</a></li>
           </ul>
 
           <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">

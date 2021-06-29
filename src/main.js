@@ -5,6 +5,8 @@ import router from './router'
 import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import VueCompositionAPI from '@vue/composition-api'
+import { VueMongoDbRealmPlugin } from './mongo-realm/mongo-realm.js'
 
 // Import the Auth0 configuration
 import { domain, clientId } from './auth_config.json'
@@ -27,6 +29,10 @@ Vue.use(Auth0Plugin, {
   }
 })
 
+Vue.use(VueCompositionAPI)
+Vue.use(new VueMongoDbRealmPlugin(), {
+  id: 'kuripotapp-aygwr'
+})
 new Vue({
   router,
   store,

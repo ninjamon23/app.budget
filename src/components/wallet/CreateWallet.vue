@@ -41,75 +41,63 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+// import { mapActions, mapGetters } from 'vuex'
+import { ref, computed, onMounted, onActivated } from '@vue/composition-api'
 export default {
+
   props: ['walletTypes', 'id'],
-  data () {
-    return {
-      form: {
-        id: 0,
-        name: '',
-        type: null,
-        balance: 0,
-        selected: false
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['getWalletToModify'])
-  },
-  methods: {
-    ...mapActions(['setCurrentWalletComponent', 'setWalletToModify']),
-    saveWallet () {
+  setup (props, { root }) {
+    console.log('root>', root)
+    const store = root.$store
+    const form = ref({
+      id: 0,
+      name: '',
+      type: null,
+      balance: 0,
+      selected: false
+    })
+
+    const saveWallet = async () => {
       let wallets = localStorage.getItem('wallets')
       if (!wallets) {
         wallets = []
       } else {
         wallets = JSON.parse(wallets)
       }
-      if (this.getWalletToModify) {
-        wallets = wallets.filter(el => el.name !== this.getWalletToModify.name)
+      if (getWalletToModify) {
+        wallets = wallets.filter(el => el.name !== getWalletToModify.name)
       }
-      wallets.push(this.form)
+      wallets.push(form.value)
       localStorage.setItem('wallets', JSON.stringify(wallets))
       // this.$emit('saved', 'ListOfWallet')
-      this.setWalletToModify(null)
-      this.setCurrentWalletComponent('ListOfWallet')
-    },
-    cancel () {
-      // this.$emit('saved', 'ListOfWallet')
-      this.setWalletToModify(null)
-      this.setCurrentWalletComponent('ListOfWallet')
+      store.dispatch('setWalletToModify', null)
+      store.dispatch('setCurrentWalletComponent', 'ListOfWallet')
     }
-  },
-  mounted () {
-    if (this.getWalletToModify) {
-      this.form = JSON.parse(JSON.stringify(this.getWalletToModify))
-    }
-  },
-  activated () {
-    // if (!this.id) {
-    //   this.form = {
-    //     id: 0,
-    //     name: '',
-    //     type: null,
-    //     balance: 0,
-    //     selected: false
-    //   }
-    // } else {
-    //   let wallets = localStorage.getItem('wallets')
-    //   if (!wallets) {
-    //     wallets = []
-    //   } else {
-    //     wallets = JSON.parse(wallets)
-    //   }
 
-    //   this.form = wallets.find(el => el.id === this.id)
-    // }
-    console.log('activated>')
-    if (this.getWalletToModify) {
-      this.form = JSON.parse(JSON.stringify(this.getWalletToModify))
+    const cancel = async () => {
+      store.dispatch('setWalletToModify', null)
+      store.dispatch('setCurrentWalletComponent', 'ListOfWallet')
     }
+
+    const getWalletToModify = computed(() => {
+      return store.getters.getWalletToModify
+    })
+
+    onMounted(() => {
+      console.log('mounted in the composition api!')
+      if (getWalletToModify) {
+        form.value = JSON.parse(JSON.stringify(getWalletToModify))
+      }
+    })
+
+    onActivated(() => {
+      console.log('onActivated in the composition api!')
+      if (getWalletToModify) {
+        form.value = JSON.parse(JSON.stringify(getWalletToModify))
+      }
+    })
+
+    return { form, saveWallet, cancel, getWalletToModify }
   }
 }
 </script>
