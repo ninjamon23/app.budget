@@ -17,6 +17,11 @@ const routes = [
         path: 'wallet',
         name: 'Wallet',
         component: () => import('../components/wallet/Wallet.vue')
+      },
+      {
+        path: 'transaction',
+        name: 'Transaction',
+        component: () => import('../components/transaction/Transaction.vue')
       }
     ]
   },
